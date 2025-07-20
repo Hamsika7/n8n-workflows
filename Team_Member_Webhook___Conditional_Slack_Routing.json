@@ -1,0 +1,295 @@
+{
+  "name": "Team Member Webhook → Conditional Slack Routing",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "d02d06ac-0b2d-4508-a004-ffbc3649db80",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -340,
+        40
+      ],
+      "id": "3196988b-a920-4913-9f5a-b337e617fbed",
+      "name": "Webhook",
+      "webhookId": "d02d06ac-0b2d-4508-a004-ffbc3649db80"
+    },
+    {
+      "parameters": {
+        "select": "user",
+        "user": {
+          "__rl": true,
+          "value": "U0910ACU0H5",
+          "mode": "list",
+          "cachedResultName": "hamsikassl2k4"
+        },
+        "text": "=🎉 {{ $json.body.email }} just invited a team member!\n\n👤 Name: {{ $json.body.fname }} {{ $json.body.lname }}\n🏢 Company: {{ $json.body.company }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        420,
+        100
+      ],
+      "id": "49d56d5f-9f11-41d6-97dd-2cf795a5d6d5",
+      "name": "Slack",
+      "webhookId": "3905bebb-734e-424f-aab0-b95c25f52a75",
+      "credentials": {
+        "slackApi": {
+          "id": "zzrjN3ZFSfVinYS4",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "user",
+        "user": {
+          "__rl": true,
+          "value": "U0910ACU0H5",
+          "mode": "list",
+          "cachedResultName": "hamsikassl2k4"
+        },
+        "text": "=🆕 {{ $json.body.email }} just created an account!",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        200,
+        -80
+      ],
+      "id": "1652eb18-48e1-42f4-8cb5-98630b89976a",
+      "name": "Slack1",
+      "webhookId": "3905bebb-734e-424f-aab0-b95c25f52a75",
+      "credentials": {
+        "slackApi": {
+          "id": "zzrjN3ZFSfVinYS4",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        420,
+        300
+      ],
+      "id": "8c645290-06bc-46c2-90ba-16744d0b8ec9",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "content": "# 📝 Workflow Notes:\n\n- ## Webhook receives team signup data manually.\n- ## Filters for \"invited_team_member\" events\n- ## Sends formatted Slack notifications\n\n**Test with Reqbin.com using sample JSON data**\n",
+        "height": 300,
+        "width": 620
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        660,
+        -60
+      ],
+      "typeVersion": 1,
+      "id": "3e14a4cb-8874-4b74-8148-90889d26aa18",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "77bf617e-7f45-4f8a-962b-0574b4205abf",
+              "leftValue": "={{ $json.body.event }}",
+              "rightValue": "=account_created",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -80,
+        40
+      ],
+      "id": "537db7af-b849-4cc2-bd6e-61982b8ac157",
+      "name": "Account Created?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "24898c2d-215e-4c47-b61f-79cc4221c99e",
+              "leftValue": "={{ $json.body.event }}",
+              "rightValue": "=invited_team_member",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        200,
+        180
+      ],
+      "id": "5c8f9fa2-7b59-445e-bb51-82d81aaf3701",
+      "name": "Invited_Team_Member"
+    },
+    {
+      "parameters": {
+        "content": "## Test 1: Valid Signup (Should Send NOT Slack Message)\n**{\n  \"id\": \"SIGNUP_002\",\n  \"fname\": \"Bob\",\n  \"lname\": \"Wilson\",\n  \"email\": \"bob@company.com\",\n  \"company\": \"TechCorp\",\n  \"event\": \"invited_team_member\"\n}**",
+        "height": 260,
+        "width": 420
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        660,
+        280
+      ],
+      "typeVersion": 1,
+      "id": "04a2ba08-2644-48a8-bb91-9073f561f6ff",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Test 2: Different Event (Should Send Message)\n**{\n  \"id\": \"SIGNUP_003\", \n  \"fname\": \"Carol\",\n  \"lname\": \"Davis\",\n  \"email\": \"carol@company.com\",\n  \"event\": \"account_created\"\n}**",
+        "height": 260,
+        "width": 400
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1100,
+        280
+      ],
+      "typeVersion": 1,
+      "id": "853a5941-a1d2-437d-9066-4e4106684e7b",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "localhost:5678",
+            "connection": "keep-alive",
+            "content-length": "127",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
+            "content-type": "application/json",
+            "accept": "*/*",
+            "origin": "chrome-extension://gmmkjpcadciiokjpikmkkmapphbmdjok",
+            "sec-fetch-site": "none",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "en-GB,en;q=0.9,ta-IN;q=0.8,ta;q=0.7,en-US;q=0.6",
+            "cookie": "rl_page_init_referrer=RudderEncrypt%3AU2FsdGVkX19VF%2BT5Ow76B9JvxfT8Q539WkEqWvKFN%2Fg%3D; rl_page_init_referring_domain=RudderEncrypt%3AU2FsdGVkX19VrW3dT6zIKXJ%2BKj71NeG9X9SMpx4gmYg%3D; n8n-auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNkNWI0MDEzLTkxMDgtNGMxNy04MzYyLTliMTk4ZmE5Yjk1NyIsImhhc2giOiJBRnBjRTNIZE50IiwiYnJvd3NlcklkIjoibjRWTjFub29ieWM5MnV3VjVSbWxkdk5BdnB2R0RBQk4vTXBscFdsUjRXST0iLCJpYXQiOjE3NTAxMzgyMTIsImV4cCI6MTc1MDc0MzAxMn0.SBYhq6_aOqHCZmls-9O3prjX0Ut0YkXChgtF2xnYH6E; rl_anonymous_id=RudderEncrypt%3AU2FsdGVkX180jF82mUJ61otML46gYL6mU9ehD21VeyPAFXY%2BxAwOwj%2FBwjLFIcfCbBCr0bXgpnH4NsES4FYeTQ%3D%3D; rl_user_id=RudderEncrypt%3AU2FsdGVkX186LFvSRLchB0BKa%2BhckzpHeHk3mP%2FAv1Yc55LUzb5VIW7CmTmnlo25ETkG3K1%2FACOkZzB2uq4Io2lebaXJdQHDNvcloFJeH9oJvnFyfjCTlqtfr4Bk9AOtJpxBBSAH4tamMeuIBpo7m%2F0N6L5c3Di6j44Ge1xkhHA%3D; rl_trait=RudderEncrypt%3AU2FsdGVkX19NbSbqyVCAlRh2g1rz8HNnfeoztYnyQUC9UZ1O0fjyLFK5M2Ut4TsYafD5NSL%2FR1Uvk%2BQkqGrxUH%2FUSFU%2FfymJkk1SZjsiew%2BI9o6k7mDEg0O1d2d9heYRkVg1EaHqTNBQvtEygN%2BsiA%3D%3D; ph_phc_4URIAm1uYfJO7j8kWSe0J8lc8IqnstRLS7Jx8NcakHo_posthog=%7B%22distinct_id%22%3A%2262cf80fc90dff23771e9913a61483c8fbb92ec35cbbc7fe2f67a67709de86bbe%233d5b4013-9108-4c17-8362-9b198fa9b957%22%2C%22%24sesid%22%3A%5Bnull%2Cnull%2Cnull%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A5678%2Fhome%2Fworkflows%22%7D%7D; rl_session=RudderEncrypt%3AU2FsdGVkX19t6AtZyiu0Rre%2FC%2BuyfTrHp5adtTrF7HS9m6bnSoCn9wjFz3louThCZ%2F8p7ze3p%2BzrBtaiTJDcDxQ%2B2jHiJiHCkLtViOmp1Ik5BU%2FmkDZVqRSQV%2FNuKVtgirYiNJnd7BUjGX3PYD3cnw%3D%3D"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "id": "SIGNUP_003",
+            "fname": "Carol",
+            "lname": "Davis",
+            "email": "carol@company.com",
+            "event": "account_created"
+          },
+          "webhookUrl": "http://localhost:5678/webhook-test/d02d06ac-0b2d-4508-a004-ffbc3649db80",
+          "executionMode": "test"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Account Created?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Account Created?": {
+      "main": [
+        [
+          {
+            "node": "Slack1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invited_Team_Member",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Invited_Team_Member": {
+      "main": [
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3810006e-d015-4d05-badf-89f5827f38a6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "62cf80fc90dff23771e9913a61483c8fbb92ec35cbbc7fe2f67a67709de86bbe"
+  },
+  "id": "4KSl7fnCqEMuSJUG",
+  "tags": []
+}

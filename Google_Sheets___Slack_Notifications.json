@@ -1,0 +1,382 @@
+{
+  "name": "Google Sheets → Slack Notifications",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1Kaj2_DgdrAnEUSrP1nwa5pm9Ok3vfmOsqwKpB8QcjuM",
+          "mode": "list",
+          "cachedResultName": "eam_Members",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Kaj2_DgdrAnEUSrP1nwa5pm9Ok3vfmOsqwKpB8QcjuM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Kaj2_DgdrAnEUSrP1nwa5pm9Ok3vfmOsqwKpB8QcjuM/edit#gid=0"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        260
+      ],
+      "id": "f019781a-51ca-47e0-8ff3-26f5089d5cb2",
+      "name": "New Team Member",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "mo3EeDRQmFgtTSxt",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Workflow Summary\n\n## Problem:\nWebhook setup was manual - had to manually send data to trigger notifications.\n\n## Solution:\nConnected Google Sheets directly to Slack - now automatically sends notifications when new team members are added to the sheet.\n\n**Before**: Manual webhook testing  \n**After**: Add row to sheet → Automatic Slack notification",
+        "height": 380,
+        "width": 460
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1020,
+        100
+      ],
+      "typeVersion": 1,
+      "id": "62ea3f75-1965-43c3-8b60-d9be7a8834b8",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "select": "user",
+        "user": {
+          "__rl": true,
+          "value": "U0910ACU0H5",
+          "mode": "list",
+          "cachedResultName": "hamsikassl2k4"
+        },
+        "text": "=🎉 New Team Member Signup Alert!\n👤 Name: {{ $json.Name }}\n📧 Email: {{ $json.Email }}\n🏢 Company: {{ $json.Company }} \n🏷️ Department: {{ $json.department || 'Not specified' }} \n📅 Join Date: {{ $json.Join_Date }} \n📊 Status: {{ $json.Status }}\n\nAdded via Google Sheets! 🎊\nWelcome to the team! 🎊",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        480,
+        -60
+      ],
+      "id": "72698383-cf09-42cf-b843-e907af6808fd",
+      "name": "Team Member Invited message",
+      "webhookId": "ee4ee59d-1651-4e0b-817a-557e846f2087",
+      "credentials": {
+        "slackApi": {
+          "id": "zzrjN3ZFSfVinYS4",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "user",
+        "user": {
+          "__rl": true,
+          "value": "U0910ACU0H5",
+          "mode": "list",
+          "cachedResultName": "hamsikassl2k4"
+        },
+        "text": "=🎉 New Team Member Signup Alert!\n👤 Name: {{ $json.Name }}\n📧 Email: {{ $json.Email }}\n🏢 Company: {{ $json.Company }} \n🏷️ Department: {{ $json.department || 'Not specified' }} \n📅 Join Date: {{ $json.Join_Date }} \n📊 Status: {{ $json.Status }}\n\nAccount was created! 🎊",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        480,
+        140
+      ],
+      "id": "a60529b0-08be-46b9-92d1-e8520e48ad86",
+      "name": "Account Created message",
+      "webhookId": "ee4ee59d-1651-4e0b-817a-557e846f2087",
+      "credentials": {
+        "slackApi": {
+          "id": "zzrjN3ZFSfVinYS4",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "40e94cd4-9398-4c1c-9e38-45959fba996a",
+              "leftValue": "={{ $json.Email }}",
+              "rightValue": "@gmail",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -100,
+        260
+      ],
+      "id": "c8ccdca8-2fdd-457b-93a8-d2978dd787d8",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.Event_Type }}",
+                    "rightValue": "=invited_team_member",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "5e1d3037-8636-433a-a176-5ade908d6002"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0b09de90-7cf4-4eb3-ad30-a942b9d56a91",
+                    "leftValue": "={{ $json.Event_Type }}",
+                    "rightValue": "=account_created",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1aba18a7-d43c-45a7-bba8-8747014ca334",
+                    "leftValue": "={{ $json.Event_Type }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "empty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "436c1d1b-8a6b-4e53-82a8-83dbeb60b591",
+                    "leftValue": "={{ $json.Event_Type }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        200,
+        100
+      ],
+      "id": "abf9718e-e37d-494d-bca0-15e6cf821dc3",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "errorMessage": "Invalid Email!"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        200,
+        460
+      ],
+      "id": "9c9a09b0-ebb0-4a2c-bcfb-156e0feed33a",
+      "name": "Invalid Email"
+    },
+    {
+      "parameters": {
+        "errorMessage": "Invalid Event!"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        480,
+        400
+      ],
+      "id": "8657815b-2035-42a3-9ad0-cbe411557384",
+      "name": "Invalid Event"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "New Team Member": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Account Created message": {
+      "main": [
+        []
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Team Member Invited message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Account Created message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid Event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e5636994-944b-43c9-8537-13895e4c44d3",
+  "meta": {
+    "instanceId": "62cf80fc90dff23771e9913a61483c8fbb92ec35cbbc7fe2f67a67709de86bbe"
+  },
+  "id": "VfypBdVqrkZMvFEN",
+  "tags": [
+    {
+      "createdAt": "2025-06-14T10:48:30.322Z",
+      "updatedAt": "2025-06-14T10:48:30.322Z",
+      "id": "QpzIDs7FJo4Je6r7",
+      "name": "slack"
+    },
+    {
+      "createdAt": "2025-06-14T10:48:50.954Z",
+      "updatedAt": "2025-06-14T10:48:50.954Z",
+      "id": "mWjGJTJSmgsuvWXd",
+      "name": "notifications"
+    },
+    {
+      "createdAt": "2025-06-14T10:48:36.678Z",
+      "updatedAt": "2025-06-14T10:48:36.678Z",
+      "id": "wVHhnSYsD7srZHyw",
+      "name": "webhook"
+    }
+  ]
+}

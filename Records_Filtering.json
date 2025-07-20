@@ -1,0 +1,385 @@
+{
+  "name": "Records Filtering",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        0
+      ],
+      "id": "d60da38b-f6ab-4c10-b621-09bba8e43086",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1N-sS8fI36qSf_zWfNzgRRzvkFA70bZY9AkdWCX1_GK8",
+          "mode": "list",
+          "cachedResultName": "Volunteer name list",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N-sS8fI36qSf_zWfNzgRRzvkFA70bZY9AkdWCX1_GK8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N-sS8fI36qSf_zWfNzgRRzvkFA70bZY9AkdWCX1_GK8/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -80,
+        0
+      ],
+      "id": "946493cc-79bf-4418-9ff9-582cd3b519d8",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "rq3VXKQCL8ksg4Fg",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5e6071ee-342d-46b7-a69e-95bfaa2df7f3",
+              "name": "TECHNICAL EVENTS",
+              "value": "={{ $json['TECHNICAL EVENTS:'].toJsonString()}}",
+              "type": "string"
+            },
+            {
+              "id": "8ce7570d-8e96-428d-9992-8f49d684f8fd",
+              "name": "ALL_COORDINATORS",
+              "value": "={{ ($json['BOYS NAME'].toSentenceCase() || '') + (($json['BOYS NAME'] && $json['GIRLS NAME']) ? ', ' : '') + ($json['GIRLS NAME'].toSentenceCase() || '') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        120,
+        0
+      ],
+      "id": "04c668af-f94f-4227-9a37-d9a4638c7efc",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -320,
+        300
+      ],
+      "id": "616aa59e-1276-413c-b503-97acf3278d1b",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        640,
+        420
+      ],
+      "id": "5c219751-62f7-48d3-a15e-40976bec0428",
+      "name": "No Operation, do nothing1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "select": "user",
+        "user": {
+          "__rl": true,
+          "value": "U0910ACU0H5",
+          "mode": "list",
+          "cachedResultName": "hamsikassl2k4"
+        },
+        "text": "=RECAP!! \nEmails:{{ $json.EMAIL }}\nCompanies:{{ $json.COMPANY }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        900,
+        220
+      ],
+      "id": "e546bc1f-5ec3-458c-8cc7-e6ac83958cf0",
+      "name": "Slack",
+      "webhookId": "b1bda6bf-2771-42ae-bd44-982ac0f4f634",
+      "credentials": {
+        "slackApi": {
+          "id": "zzrjN3ZFSfVinYS4",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1s8aUigUClOjPyh55ItkjINGRNd9gZU97Q0vBNnHusDY",
+          "mode": "list",
+          "cachedResultName": "Employee Records Sample",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1s8aUigUClOjPyh55ItkjINGRNd9gZU97Q0vBNnHusDY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1s8aUigUClOjPyh55ItkjINGRNd9gZU97Q0vBNnHusDY/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -100,
+        300
+      ],
+      "id": "3b53f7ff-eb84-404a-9c9a-e7e5a84c620f",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "rq3VXKQCL8ksg4Fg",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b89101fd-8db0-4a64-b7e6-4e75373a7dc5",
+              "leftValue": "={{ $json.EMAIL }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        120,
+        300
+      ],
+      "id": "bcec4a88-28a5-4a26-83fc-128bf9a3b5a0",
+      "name": "Filter Emails"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d9805d03-f27e-414f-8b86-60a067d78f07",
+              "leftValue": "={{ $json.EMAIL }}",
+              "rightValue": "@gmail",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "04f61769-015a-46ce-92a2-75ade2d08506",
+              "leftValue": "={{ $json.EMAIL }}",
+              "rightValue": "@yahoo",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "d21cd51a-b5c7-49ba-9c02-c0f95d7eaaff",
+              "leftValue": "={{ $json.EMAIL }}",
+              "rightValue": "@hotmail",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "b556107b-b935-45c8-93f3-9c6c50bb1987",
+              "leftValue": "={{ $json.EMAIL }}",
+              "rightValue": "outlook.com",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        340,
+        300
+      ],
+      "id": "d54c7253-2bb2-42a8-9426-c57997289ef3",
+      "name": "Personal Or Professional Email ID"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "EMAIL"
+            },
+            {
+              "fieldToAggregate": "COMPANY"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        640,
+        220
+      ],
+      "id": "d63a5efd-e789-43de-864b-aef8d284835c",
+      "name": "Aggregate - Emails & Company"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "main": [
+        [
+          {
+            "node": "Filter Emails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Emails": {
+      "main": [
+        [
+          {
+            "node": "Personal Or Professional Email ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Personal Or Professional Email ID": {
+      "main": [
+        [
+          {
+            "node": "Aggregate - Emails & Company",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate - Emails & Company": {
+      "main": [
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a8497280-f7a8-41d0-a02d-1e316d453acd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "62cf80fc90dff23771e9913a61483c8fbb92ec35cbbc7fe2f67a67709de86bbe"
+  },
+  "id": "Dlb9rEHX67V2h38y",
+  "tags": []
+}
