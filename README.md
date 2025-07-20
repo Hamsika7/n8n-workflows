@@ -19,8 +19,6 @@ Collection of automation workflows built with n8n for learning.
 <div align="center">
 <img src="screenshots/google-sheets-slack.png" width="600"></div>
 
-**Error Handler** - Basic error handling workflow
-
 ## Setup
 
 1. Import JSON files into your n8n instance
